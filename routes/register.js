@@ -6,15 +6,15 @@ const User = require('../models/user');
 router.post('/', (req, res) => {
     const { username, email } = req.body;
     if (!username || !email) {
-        return res.status(400).send('Username and email are required.');
+        return res.status(400).json({ success: false, message: 'Username and email are required.' });
     }
     const newUser = new User({ username, email });
     newUser.save()
     .then(()=>{
-        res.status(201).send('User registered successfully!');
+        res.status(201).json({ success: true, message: 'User registered successfully!' });
     })
     .catch(err => {
-        res.status(400).send('Error: '+err);
+        res.status(400).json({ success: false, message: 'Error: ' + err });
     });
 });
 

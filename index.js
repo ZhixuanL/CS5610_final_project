@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8000;
 const mongoDB = 'mongodb+srv://zhixuanl0805:Aji3PmmC46yf4f5I@finalproject.lb9la.mongodb.net/?retryWrites=true&w=majority&appName=FinalProject'
 const registerRouter = require('./routes/register');
 
@@ -17,6 +17,8 @@ mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true})
 // parse JSON data submitted by frontend users
 app.use(express.json());
 
+// serve static files from the public directory
+app.use(express.static('public'));
 
 // use registerRouter for the /register route
 app.use('/register', registerRouter);
