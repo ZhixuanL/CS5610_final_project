@@ -1,0 +1,33 @@
+body{
+    background-color: #D6F6D5;
+    font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+    color:#333;
+    margin:0;
+    padding:0;
+}
+
+h1,h2,h3{
+    color: #2E8B57;
+    text-align: center;
+}
+
+input[type="text"], input[type="email"], button{
+    font-family: inherit;
+    font-size: 1rem;
+    padding: 10px;
+    margin: 10px;
+    border: 2px solid #2E8B57;
+    border-radius: 5px;
+    background-color: #F9FFF8;
+}
+
+button {
+    background-color: #2E8B57;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #3CB371;
+}
