@@ -28,8 +28,9 @@ app.use('/register', registerRouter);
 // use loginRouter for the /login route
 app.use('/login', loginRouter);
 
+// home page
 app.get('/', (req,res) => {
-    res.send('Hello,brave new world!');
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // import path to remove .html suffix in URL
