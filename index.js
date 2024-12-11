@@ -3,7 +3,9 @@ const mongoose = require('mongoose');
 const app = express();
 const port = process.env.PORT || 8000;
 const mongoDB = 'mongodb+srv://zhixuanl0805:Aji3PmmC46yf4f5I@finalproject.lb9la.mongodb.net/?retryWrites=true&w=majority&appName=FinalProject'
+const path = require('path');
 const registerRouter = require('./routes/register');
+const loginRouter = require('./routes/login');
 
 // connect to MongoDB
 mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true})
@@ -23,8 +25,20 @@ app.use(express.static('public'));
 // use registerRouter for the /register route
 app.use('/register', registerRouter);
 
+// use loginRouter for the /login route
+app.use('/login', loginRouter);
+
 app.get('/', (req,res) => {
     res.send('Hello,brave new world!');
+});
+
+// import path to remove .html suffix in URL
+app.get('/register', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'register.html'));
+});
+
+app.get('/login', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
 
 // start the server
