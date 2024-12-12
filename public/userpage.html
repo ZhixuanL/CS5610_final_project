@@ -58,20 +58,49 @@
                             <p><strong>User ID: ${post.userId}</strong>:</p>
                             <p>${post.content}</p>
                             <p><small>${new Date(post.timestamp).toLocaleString()}</small></p>
+                            <!-- Added Edit Button with post ID -->
+                            <button class="edit-post" data-post-id="${post._id}">Edit</button>
                             <hr>
                         `;
                         postsContainer.appendChild(postDiv);
+                    });
+
+                    // Attach event listeners to edit buttons
+                    document.querySelectorAll('.edit-post').forEach(button => {
+                        button.addEventListener('click', (event) => {
+                            const postId = event.target.getAttribute('data-post-id');
+                            editPost(postId); // Call editPost function with post ID
+                        });
                     });
                 })
                 .catch(error => console.log('Error fetching posts:', error));
             }
 
-
-
+            // Function to handle editing a post
+            function editPost(postId) {
+                // Prompt the user to edit post content
+                const postContent = prompt('Edit your post content:');
+                if (postContent && postContent.trim()) {
+                    fetch(`/userpost/${postId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ content: postContent }) // Send updated content
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert('Post updated successfully!');
+                        fetchPosts(); // Refresh posts list after updating
+                    })
+                    .catch(error => console.log('Error updating post:', error));
+                }
+            }
 
             const token = localStorage.getItem('token');
             console.log('Retrieved Token:', token);
-            if(!token) {
+            if (!token) {
                 window.location.href = '/login';
             }
 
@@ -86,35 +115,34 @@
             .then(data => {
                 document.getElementById('username').innerText = data.data.username;
                 document.getElementById('registered-at').innerText = new Date(data.data.registeredAt).toLocaleString();
-                fetchPosts();
+                fetchPosts(); // Call fetchPosts() to display posts
             })
             .catch(error => console.log('Error fetching user data:', error));
 
 
-            // create a new post
+            // Create a new post
             document.getElementById('create-post').addEventListener('click', () => {
-            const content = document.getElementById('post-content').value;
-            if (!content.trim()) {
-                alert('Post content cannot be empty!');
-                return;
-            }
-            fetch('/userpost', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ content })
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert(data.message);
-                document.getElementById('post-content').value = ''; // Clear input
-                fetchPosts(); // Refresh posts list
-            })
-            .catch(error => console.log('Error creating post:', error));
-
-        });
+                const content = document.getElementById('post-content').value;
+                if (!content.trim()) {
+                    alert('Post content cannot be empty!');
+                    return;
+                }
+                fetch('/userpost', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ content })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    document.getElementById('post-content').value = ''; // Clear input
+                    fetchPosts(); // Refresh posts list
+                })
+                .catch(error => console.log('Error creating post:', error));
+            });
         </script>
     </body>
 </html>
