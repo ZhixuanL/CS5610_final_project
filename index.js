@@ -7,6 +7,8 @@ const path = require('path');
 const registerRouter = require('./routes/register');
 const loginRouter = require('./routes/login');
 const userpageRouter = require('./routes/userpage');
+const userpostRouter = require('./routes/userpost');
+
 
 // connect to MongoDB
 mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true})
@@ -30,6 +32,8 @@ app.use('/register', registerRouter);
 app.use('/login', loginRouter);
 
 app.use('/userpage', userpageRouter);
+
+app.use('/userpost', userpostRouter);
 
 // home page
 app.get('/', (req,res) => {

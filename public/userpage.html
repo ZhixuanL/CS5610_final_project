@@ -19,7 +19,56 @@
             <p>Joined at: <span id="registered-at"></span></p>
         </div>
 
+        <div class="new-post">
+            <textarea id="post-content" placeholder="What's on your mind?" maxlength="500"></textarea>
+            <button id="create-post">Post</button>
+        </div>
+
+        <div id="posts-container">
+            <h2>Recent Posts</h2>
+        </div>
+
         <script>
+            // Function to fetch and display posts
+            function fetchPosts() {
+                fetch('/userpost', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Fetched data:', data);
+
+                    const posts = data.posts;
+                    const postsContainer = document.getElementById('posts-container');
+                    postsContainer.innerHTML = '<h2>Recent Posts</h2>';
+
+                    if (!Array.isArray(posts)) {
+                        console.error('Expected an array of posts, but received:', posts);
+                        return;
+                    }
+
+                    posts.forEach(post => {
+                        const postDiv = document.createElement('div');
+                        postDiv.classList.add('post');
+                        postDiv.innerHTML = `
+                            <p><strong>User ID: ${post.userId}</strong>:</p>
+                            <p>${post.content}</p>
+                            <p><small>${new Date(post.timestamp).toLocaleString()}</small></p>
+                            <hr>
+                        `;
+                        postsContainer.appendChild(postDiv);
+                    });
+                })
+                .catch(error => console.log('Error fetching posts:', error));
+            }
+
+
+
+
             const token = localStorage.getItem('token');
             console.log('Retrieved Token:', token);
             if(!token) {
@@ -37,9 +86,35 @@
             .then(data => {
                 document.getElementById('username').innerText = data.data.username;
                 document.getElementById('registered-at').innerText = new Date(data.data.registeredAt).toLocaleString();
+                fetchPosts();
             })
             .catch(error => console.log('Error fetching user data:', error));
 
+
+            // create a new post
+            document.getElementById('create-post').addEventListener('click', () => {
+            const content = document.getElementById('post-content').value;
+            if (!content.trim()) {
+                alert('Post content cannot be empty!');
+                return;
+            }
+            fetch('/userpost', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ content })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                document.getElementById('post-content').value = ''; // Clear input
+                fetchPosts(); // Refresh posts list
+            })
+            .catch(error => console.log('Error creating post:', error));
+
+        });
         </script>
     </body>
 </html>
