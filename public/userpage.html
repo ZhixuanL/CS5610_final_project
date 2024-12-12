@@ -13,6 +13,7 @@
             <a href="/">Home</a>
             <a href="/register">Register</a>
             <a href="/login">Login</a>
+            <button id="logout-btn">Log Out</button>
         </nav>
         
         <div class="user-info">
@@ -169,6 +170,13 @@
                     fetchPosts(); // Refresh posts list
                 })
                 .catch(error => console.log('Error creating post:', error));
+            });
+
+            // Log Out Button Logic
+            document.getElementById('logout-btn').addEventListener('click', () => {
+                localStorage.removeItem('token');
+                alert('You have been logged out.');
+                window.location.href = '/login';
             });
         </script>
     </body>
