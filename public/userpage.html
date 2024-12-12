@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Userpage</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body>
+        <h1>Welcome back, <span id="username"></span></h1>
+        <nav class="navbar">
+            <a href="/">Home</a>
+            <a href="/register">Register</a>
+            <a href="/login">Login</a>
+        </nav>
+        
+        <div class="user-info">
+            <p>Joined at: <span id="registered-at"></span></p>
+        </div>
+
+        <script>
+            const token = localStorage.getItem('token');
+            console.log('Retrieved Token:', token);
+            if(!token) {
+                window.location.href = '/login';
+            }
+
+            fetch('/userpage', {
+                method:'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('username').innerText = data.data.username;
+                document.getElementById('registered-at').innerText = new Date(data.data.registeredAt).toLocaleString();
+            })
+            .catch(error => console.log('Error fetching user data:', error));
+
+        </script>
+    </body>
+</html>
