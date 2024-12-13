@@ -14,5 +14,46 @@
             <a href="/register">Register</a>
             <a href="/login">Login</a>
         </nav>
+
+        <div id="posts-container">
+            <h2>Recent Posts</h2>
+        </div>
+
+        <script>
+            function fetchPosts() {
+                fetch('/allposts', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const posts = data.posts;
+                    const postsContainer = document.getElementById('posts-container');
+                    postsContainer.innerHTML = '<h2>Recent Posts</h2>';
+
+                    if (!Array.isArray(posts)) {
+                        console.error('Expected an array of posts, but received: '+posts);
+                        return;
+                    }
+
+                    posts.forEach(post => {
+                        const postDiv = document.createElement('div');
+                        postDiv.classList.add('post');
+                        postDiv.innerHTML = `
+                            <p><strong>${post.userId.username}</strong></p>
+                            <p>${post.content}</p>
+                            <p><small>${new Date(post.timestamp)}</small></p>
+                            <hr>
+                        `;
+                        postsContainer.appendChild(postDiv);
+                    });
+                })
+                .catch(error => console.log('Error fetching posts: ', error));
+            }
+
+            fetchPosts();
+        </script>
     </body>
 </html>

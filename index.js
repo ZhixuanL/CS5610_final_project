@@ -8,6 +8,7 @@ const registerRouter = require('./routes/register');
 const loginRouter = require('./routes/login');
 const userpageRouter = require('./routes/userpage');
 const userpostRouter = require('./routes/userpost');
+const allpostsRouter = require('./routes/allposts');
 
 
 // connect to MongoDB
@@ -34,6 +35,8 @@ app.use('/login', loginRouter);
 app.use('/userpage', userpageRouter);
 
 app.use('/userpost', userpostRouter);
+
+app.use('/allposts', allpostsRouter);
 
 // home page
 app.get('/', (req,res) => {
